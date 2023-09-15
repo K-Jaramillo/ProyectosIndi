@@ -18,6 +18,8 @@ pygame.display.set_caption("Ping Pong")
 velocidad = 5
 jugador1_puntos = 0
 jugador2_puntos = 0
+contador_jugador1 = 0  # Contador de veces que el jugador 1 llega a 7 puntos
+contador_jugador2 = 0  # Contador de veces que el jugador 2 llega a 7 puntos
 reloj = pygame.time.Clock()
 
 # Raquetas
@@ -38,11 +40,17 @@ def dibujar():
     pygame.draw.aaline(pantalla, NEGRO, (ANCHO // 2, 0), (ANCHO // 2, ALTO))
 
     # Marcador
-    fuente = pygame.font.Font(None, 48)
+    fuente = pygame.font.Font(None, 20)
     marcador1 = fuente.render(str(jugador1_puntos), True, NEGRO)
     marcador2 = fuente.render(str(jugador2_puntos), True, NEGRO)
     pantalla.blit(marcador1, (ANCHO // 4, 10))
     pantalla.blit(marcador2, (3 * ANCHO // 4 - 30, 10))
+
+    # Contador de veces que se llega a 7 puntos
+    contador_marcador1 = fuente.render(f"Set: {contador_jugador1}", True, NEGRO)
+    contador_marcador2 = fuente.render(f"Set: {contador_jugador2}", True, NEGRO)
+    pantalla.blit(contador_marcador1, (ANCHO // 4, 40))
+    pantalla.blit(contador_marcador2, (3 * ANCHO // 4 - 30, 40))
 
     pygame.display.flip()
 
@@ -75,11 +83,17 @@ while True:
     # Puntuación
     if bola.left <= 0:
         jugador2_puntos += 1
+        if jugador2_puntos == 7:
+            contador_jugador2 += 1
+            jugador2_puntos = 0
         bola = pygame.Rect(ANCHO // 2 - 15, ALTO // 2 - 15, 30, 30)
         bola_dx = velocidad * random.choice((1, -1))
         bola_dy = velocidad * random.choice((1, -1))
     if bola.right >= ANCHO:
         jugador1_puntos += 1
+        if jugador1_puntos == 7:
+            contador_jugador1 += 1
+            jugador1_puntos = 0
         bola = pygame.Rect(ANCHO // 2 - 15, ALTO // 2 - 15, 30, 30)
         bola_dx = velocidad * random.choice((1, -1))
         bola_dy = velocidad * random.choice((1, -1))
