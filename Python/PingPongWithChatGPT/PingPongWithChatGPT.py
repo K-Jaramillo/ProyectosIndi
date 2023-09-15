@@ -26,7 +26,8 @@ ancho_pelota = 10
 alto_pelota = 10
 
 # Velocidad de las raquetas
-velocidad_raqueta = 5
+velocidad_raqueta = 5 * 0.7  # Reducida al 70%
+sensibilidad_raquetas = velocidad_raqueta / 2  # Sensibilidad en la mitad de la velocidad
 
 # Velocidad de la pelota
 velocidad_pelota = [random.choice([-1, 1]) * 1, random.uniform(-1, 1)]
@@ -117,15 +118,15 @@ while True:
 
         # Jugador 1
         if keys[pygame.K_w] and posicion_raqueta_jugador1[1] > 0:
-            posicion_raqueta_jugador1[1] -= velocidad_raqueta
+            posicion_raqueta_jugador1[1] -= sensibilidad_raquetas
         if keys[pygame.K_s] and posicion_raqueta_jugador1[1] < pantalla_alto - alto_raqueta:
-            posicion_raqueta_jugador1[1] += velocidad_raqueta
+            posicion_raqueta_jugador1[1] += sensibilidad_raquetas
 
         # Jugador 2
         if keys[pygame.K_UP] and posicion_raqueta_jugador2[1] > 0:
-            posicion_raqueta_jugador2[1] -= velocidad_raqueta
+            posicion_raqueta_jugador2[1] -= sensibilidad_raquetas
         if keys[pygame.K_DOWN] and posicion_raqueta_jugador2[1] < pantalla_alto - alto_raqueta:
-            posicion_raqueta_jugador2[1] += velocidad_raqueta
+            posicion_raqueta_jugador2[1] += sensibilidad_raquetas
 
         # Movimiento de la pelota
         posicion_pelota[0] += velocidad_pelota[0]
@@ -161,10 +162,11 @@ while True:
             estado_juego = "fin"
 
         # Actualizar marcador
-        font = pygame.font.Font(None, 36)
-        texto_puntos = font.render(f"Jugador 1: {puntos_jugador1}  Jugador 2: {puntos_jugador2}", True, color_texto)
-        pantalla.blit(texto_puntos, (280, 20))
-
+        font = pygame.font.Font(None, 50)
+        texto_puntos = font.render(f"{puntos_jugador1}   {puntos_jugador2}", True, color_texto)
+        ancho_texto = texto_puntos.get_width()
+        posicion_x = (pantalla_ancho - ancho_texto) // 2
+        pantalla.blit(texto_puntos, (posicion_x, 20))
         pygame.display.flip()
 
     elif estado_juego == "fin":
