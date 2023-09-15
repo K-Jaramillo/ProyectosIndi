@@ -1,5 +1,6 @@
-V1
+PreAlpha
 
-MEJORAS 
+Incluye
 
-*Marcador*
+-*Marcador*
+-*Pantalla de incio*
