@@ -21,6 +21,7 @@ jugador2_puntos = 0
 contador_jugador1 = 0  # Contador de veces que el jugador 1 llega a 7 puntos
 contador_jugador2 = 0  # Contador de veces que el jugador 2 llega a 7 puntos
 reloj = pygame.time.Clock()
+inicio = True  # Variable para controlar la pantalla de inicio
 
 # Raquetas
 raqueta1 = pygame.Rect(50, ALTO // 2 - 70, 10, 140)
@@ -47,15 +48,35 @@ def dibujar():
     pantalla.blit(marcador2, (3 * ANCHO // 4 - 30, 10))
 
     # Contador de veces que se llega a 7 puntos
-    contador_marcador1 = fuente.render(f"Set: {contador_jugador1}", True, NEGRO)
-    contador_marcador2 = fuente.render(f"Set: {contador_jugador2}", True, NEGRO)
-    pantalla.blit(contador_marcador1, (ANCHO // 4, 40))
-    pantalla.blit(contador_marcador2, (3 * ANCHO // 4 - 30, 40))
+    contador_marcador1 = fuente.render(f"Rondas: {contador_jugador1}", True, NEGRO)
+    contador_marcador2 = fuente.render(f"Rondas: {contador_jugador2}", True, NEGRO)
+    pantalla.blit(contador_marcador1, (ANCHO // 4, 30))
+    pantalla.blit(contador_marcador2, (2.8 * ANCHO // 4, 30))
 
     pygame.display.flip()
 
+# Pantalla de inicio
+def pantalla_inicio():
+    pantalla.fill(BLANCO)
+    fuente = pygame.font.Font(None, 30)
+    texto = fuente.render("Presiona ESPACIO para comenzar", True, NEGRO)
+    pantalla.blit(texto, (ANCHO // 4, ALTO // 2))
+    pygame.display.flip()
+    esperando_inicio = True
+    while esperando_inicio:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                esperando_inicio = False
+
 # Bucle principal del juego
 while True:
+    if inicio:
+        pantalla_inicio()
+        inicio = False
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
