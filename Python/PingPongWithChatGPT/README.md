@@ -1,6 +1,6 @@
-JUEGO DE PING PONG CREADO
+#JUEGO DE PING PONG CREADO CON AYUDA DE CHATGPT
 
-reAlpha
+version : reAlpha
 
 Incluye
 
