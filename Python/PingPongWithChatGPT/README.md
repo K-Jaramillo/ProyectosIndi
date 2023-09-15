@@ -1,4 +1,4 @@
-JUEGO DE PING PONG CREADO CON AYUDA DE CHATGPT
+JUEGO DE PING PONG CREADO
 
 reAlpha
 
@@ -6,4 +6,4 @@ Incluye
 
 -*Marcador*
 -*Pantalla de incio*
--*Botón Switch*
+-*.EXE*
