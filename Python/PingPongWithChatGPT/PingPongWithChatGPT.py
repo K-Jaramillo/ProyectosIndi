@@ -22,6 +22,7 @@ contador_jugador1 = 0  # Contador de veces que el jugador 1 llega a 7 puntos
 contador_jugador2 = 0  # Contador de veces que el jugador 2 llega a 7 puntos
 reloj = pygame.time.Clock()
 inicio = True  # Variable para controlar la pantalla de inicio
+inversion_colores = False  # Variable para controlar la inversión de colores
 
 # Raquetas
 raqueta1 = pygame.Rect(50, ALTO // 2 - 70, 10, 140)
@@ -34,24 +35,30 @@ bola_dy = velocidad * random.choice((1, -1))
 
 # Función para dibujar la pantalla y objetos del juego
 def dibujar():
-    pantalla.fill(BLANCO)
-    pygame.draw.rect(pantalla, NEGRO, raqueta1)
-    pygame.draw.rect(pantalla, NEGRO, raqueta2)
-    pygame.draw.ellipse(pantalla, NEGRO, bola)
-    pygame.draw.aaline(pantalla, NEGRO, (ANCHO // 2, 0), (ANCHO // 2, ALTO))
+    pantalla.fill(BLANCO if not inversion_colores else NEGRO)  # Invertir colores si es necesario
+    pygame.draw.rect(pantalla, NEGRO if not inversion_colores else BLANCO, raqueta1)
+    pygame.draw.rect(pantalla, NEGRO if not inversion_colores else BLANCO, raqueta2)
+    pygame.draw.ellipse(pantalla, NEGRO if not inversion_colores else BLANCO, bola)
+    pygame.draw.aaline(pantalla, NEGRO if not inversion_colores else BLANCO, (ANCHO // 2, 0), (ANCHO // 2, ALTO))
 
     # Marcador
     fuente = pygame.font.Font(None, 20)
-    marcador1 = fuente.render(str(jugador1_puntos), True, NEGRO)
-    marcador2 = fuente.render(str(jugador2_puntos), True, NEGRO)
+    marcador1 = fuente.render(str(jugador1_puntos), True, NEGRO if not inversion_colores else BLANCO)
+    marcador2 = fuente.render(str(jugador2_puntos), True, NEGRO if not inversion_colores else BLANCO)
     pantalla.blit(marcador1, (ANCHO // 4, 10))
     pantalla.blit(marcador2, (3 * ANCHO // 4 - 30, 10))
 
     # Contador de veces que se llega a 7 puntos
-    contador_marcador1 = fuente.render(f"Rondas: {contador_jugador1}", True, NEGRO)
-    contador_marcador2 = fuente.render(f"Rondas: {contador_jugador2}", True, NEGRO)
+    contador_marcador1 = fuente.render(f"Rondas: {contador_jugador1}", True, NEGRO if not inversion_colores else BLANCO)
+    contador_marcador2 = fuente.render(f"Rondas: {contador_jugador2}", True, NEGRO if not inversion_colores else BLANCO)
     pantalla.blit(contador_marcador1, (ANCHO // 4, 30))
     pantalla.blit(contador_marcador2, (2.8 * ANCHO // 4, 30))
+
+    # Botón de inversión de colores
+    pygame.draw.rect(pantalla, NEGRO, (ANCHO - 120, 10, 100, 40))
+    fuente = pygame.font.Font(None, 24)
+    texto_boton = fuente.render("Switch", True, BLANCO)
+    pantalla.blit(texto_boton, (ANCHO - 110, 20))
 
     pygame.display.flip()
 
@@ -71,6 +78,11 @@ def pantalla_inicio():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 esperando_inicio = False
 
+# Función para invertir los colores
+def invertir_colores():
+    global inversion_colores
+    inversion_colores = not inversion_colores
+
 # Bucle principal del juego
 while True:
     if inicio:
@@ -81,6 +93,11 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                x, y = event.pos
+                if ANCHO - 120 <= x <= ANCHO - 20 and 10 <= y <= 50:
+                    invertir_colores()
 
     # Movimiento de raquetas
     teclas = pygame.key.get_pressed()
@@ -125,5 +142,3 @@ while True:
 
     dibujar()
     reloj.tick(60)
-
-
