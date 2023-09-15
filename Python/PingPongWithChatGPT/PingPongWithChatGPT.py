@@ -43,10 +43,6 @@ def dibujar():
 
     # Marcador
     fuente = pygame.font.Font(None, 20)
-    marcador1 = fuente.render(str(jugador1_puntos), True, NEGRO if not inversion_colores else BLANCO)
-    marcador2 = fuente.render(str(jugador2_puntos), True, NEGRO if not inversion_colores else BLANCO)
-    pantalla.blit(marcador1, (ANCHO // 4, 10))
-    pantalla.blit(marcador2, (3 * ANCHO // 4 - 30, 10))
 
     # Contador de veces que se llega a 7 puntos
     contador_marcador1 = fuente.render(f"Rondas: {contador_jugador1}", True, NEGRO if not inversion_colores else BLANCO)
@@ -83,6 +79,31 @@ def invertir_colores():
     global inversion_colores
     inversion_colores = not inversion_colores
 
+# Función para mostrar la pantalla de reinicio
+def pantalla_reinicio(ganador):
+    pantalla.fill(BLANCO)
+    fuente = pygame.font.Font(None, 30)
+    texto = fuente.render(f"Jugador {ganador} ha ganado.", True, NEGRO)
+    pantalla.blit(texto, (ANCHO // 4, ALTO // 2 - 20))
+    texto2 = fuente.render("Presiona ESPACIO para reiniciar", True, NEGRO)
+    pantalla.blit(texto2, (ANCHO // 4, ALTO // 2 + 10))
+    pygame.display.flip()
+    esperando_reinicio = True
+    while esperando_reinicio:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                # Reiniciar variables del juego
+                global jugador1_puntos, jugador2_puntos, contador_jugador1, contador_jugador2, inicio
+                jugador1_puntos = 0
+                jugador2_puntos = 0
+                contador_jugador1 = 0
+                contador_jugador2 = 0
+                inicio = True
+                esperando_reinicio = False
+
 # Bucle principal del juego
 while True:
     if inicio:
@@ -98,6 +119,7 @@ while True:
                 x, y = event.pos
                 if ANCHO - 120 <= x <= ANCHO - 20 and 10 <= y <= 50:
                     invertir_colores()
+
 
     # Movimiento de raquetas
     teclas = pygame.key.get_pressed()
@@ -118,23 +140,29 @@ while True:
     if bola.colliderect(raqueta1) or bola.colliderect(raqueta2):
         bola_dx *= -1
 
-    # Puntuación
+ # Puntuación
     if bola.left <= 0:
         jugador2_puntos += 1
         if jugador2_puntos == 7:
             contador_jugador2 += 1
             jugador2_puntos = 0
-        bola = pygame.Rect(ANCHO // 2 - 15, ALTO // 2 - 15, 30, 30)
-        bola_dx = velocidad * random.choice((1, -1))
-        bola_dy = velocidad * random.choice((1, -1))
+            if contador_jugador2 == 7:
+                pantalla_reinicio(2)  # Mostrar pantalla de reinicio para el jugador 2
+            else:
+                bola = pygame.Rect(ANCHO // 2 - 15, ALTO // 2 - 15, 30, 30)
+                bola_dx = velocidad * random.choice((1, -1))
+                bola_dy = velocidad * random.choice((1, -1))
     if bola.right >= ANCHO:
         jugador1_puntos += 1
         if jugador1_puntos == 7:
             contador_jugador1 += 1
             jugador1_puntos = 0
-        bola = pygame.Rect(ANCHO // 2 - 15, ALTO // 2 - 15, 30, 30)
-        bola_dx = velocidad * random.choice((1, -1))
-        bola_dy = velocidad * random.choice((1, -1))
+            if contador_jugador1 == 7:
+                pantalla_reinicio(1)  # Mostrar pantalla de reinicio para el jugador 1
+            else:
+                bola = pygame.Rect(ANCHO // 2 - 15, ALTO // 2 - 15, 30, 30)
+                bola_dx = velocidad * random.choice((1, -1))
+                bola_dy = velocidad * random.choice((1, -1))
 
     # Colisiones con los bordes
     if bola.top <= 0 or bola.bottom >= ALTO:
